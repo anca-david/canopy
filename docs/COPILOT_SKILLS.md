@@ -111,7 +111,6 @@ The agent reads the `guide.mdx` documentation, stories, and documentation images
 | `canopy-hero-img` | `LgHeroImgComponent`, imageUrl, overlap, grid requirements | — |
 | **Actions** | | |
 | `canopy-button` | Button variants, priorities, sizes, icon usage, dos and don'ts | — |
-| `canopy-quick-action` | `LgQuickActionComponent`, icon, label, disabled state | — |
 | `canopy-filter-container` | `LgFilterContainerComponent`, filter button group pattern | — |
 | **Feedback** | | |
 | `canopy-alert` | `LgAlertComponent`, variants, icon usage, dos and don'ts | — |
@@ -144,7 +143,7 @@ The agent reads the `guide.mdx` documentation, stories, and documentation images
 | `canopy-forms-radio` | `LgRadioGroupComponent`, inline, value, max 5 options | — |
 | `canopy-forms-segment` | Segment group/button, stack input, 2–5 buttons | — |
 | `canopy-forms-checkbox` | `LgToggleComponent` (checkbox), group, size, inline | — |
-| `canopy-forms-switch` | `LgToggleComponent` (switch), immediate effect, fieldset | — |
+| `canopy-forms-switch` | `LgToggleComponent` (switch), deprecation/removal migration guidance | Deprecated/Removed |
 | `canopy-forms-filter-buttons` | Filter radio/checkbox, max 10 options, default deselected | — |
 | **Utilities** | | |
 | `canopy-pictogram` | `LgPictogramComponent`, sizes, colour inputs, global branding | — |
@@ -161,6 +160,8 @@ The agent reads the `guide.mdx` documentation, stories, and documentation images
 | **Deprecated/Removed** | | |
 | `canopy-carousel` | Deprecation notice for `LgCarouselComponent` | Deprecated |
 | `canopy-brand-icon` | Removal notice for `LgBrandIconComponent` | Removed |
+| `canopy-forms-switch` | Removal notice for `lg-switch` and `variant="switch"` migration paths | Removed |
+| `canopy-quick-action` | Removal notice for `lg-quick-action` and replacements using button/link patterns | Removed |
 | **Styles** | | |
 | `canopy-link` | Anchor styles, external links, icons in links, colour modes | — |
 | `canopy-utils` | `lg-visually-hidden`, `lg-unstyled-link` CSS utility classes | — |
