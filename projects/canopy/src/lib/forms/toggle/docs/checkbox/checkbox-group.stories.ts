@@ -70,7 +70,7 @@ class ReactiveFormComponent {
 
 export default {
   title: 'Components/Forms/Checkbox/Examples',
-  tags: [ 'pending' ],
+  tags: [ 'updated' ],
   component: LgCheckboxGroupComponent,
   decorators: [
     moduleMetadata({

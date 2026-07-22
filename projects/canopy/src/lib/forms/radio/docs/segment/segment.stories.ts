@@ -71,6 +71,7 @@ class ReactiveFormSegmentComponent {
 
 export default {
   title: 'Components/Forms/Segment/Examples',
+  tags: [ 'updated' ],
   component: LgRadioGroupComponent,
   decorators: [
     moduleMetadata({

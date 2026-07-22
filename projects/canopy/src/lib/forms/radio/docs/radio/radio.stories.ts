@@ -73,7 +73,7 @@ class ReactiveFormRadioComponent {
 
 export default {
   title: 'Components/Forms/Radio/Examples',
-  tags: [ 'pending' ],
+  tags: [ 'updated' ],
   component: LgRadioGroupComponent,
   decorators: [
     moduleMetadata({

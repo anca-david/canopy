@@ -64,6 +64,7 @@ const sizes = [ 'sm', 'md', 'lg', 'xl', 'xxl' ];
 
 export default {
   title: 'Foundations/Pictogram/Catalog',
+  tags: [ 'updated' ],
   decorators: [
     moduleMetadata({
       imports: [ SwatchPictogramComponent, LgPictogramComponent ],

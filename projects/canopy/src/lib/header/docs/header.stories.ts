@@ -75,7 +75,7 @@ class PrimaryNavigationComponent {
 
 export default {
   title: 'Components/Header/Examples',
-  tags: [ 'pending' ],
+  tags: [ 'updated' ],
   component: LgHeaderComponent,
   decorators: [
     moduleMetadata({
