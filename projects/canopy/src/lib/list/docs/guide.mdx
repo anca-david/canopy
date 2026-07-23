@@ -1,148 +1,131 @@
-import { Meta, Markdown, Source, Story, Controls } from '@storybook/addon-docs/blocks';
+import { Meta, Markdown, Source } from '@storybook/addon-docs/blocks';
 import Feedback from '../../docs/common/feedback.md?raw';
 import * as ListStories from './lists.stories';
-import { CustomBadge } from 'storybook-addon-tag-badges/manager-helpers';
 
-<Meta title="Components/List/Guide" tags={['pending']} />
+<Meta title="Components/List with icons/Guide" />
 
-# List
+# List with icons
 
-<CustomBadge
-  text="Pending"
-  style={{ backgroundColor: '#005dba', borderColor: '#005dba', color: '#fff' }}
-/>
-<span class="small-text">Due for brand modernisation</span>
+<p class="standfirst">
+  Lists are used to list an array of items. Canopy provides components for icon-enhanced
+  lists with consistent styling and themable variants.
+</p>
+*Design guidance for this component is currently being rewritten. Please contact the
+Canopy team if you need more information on how to use this component.*
 
-<p class="standfirst">Lists are used to list an array of items.</p>
+## Usage
 
-<div class="lg-sb-preview">
-  <Story of={ListStories.ColouredListWithIcons} />
+The list with icons component supports:
 
-</div>
-
-## Standard list
-
-### Unordered list
-
-For a bulleted unordered list, use standard HTML:
-
-```html
-<ul>
-  <li>List item 1</li>
-  <li>List item 2</li>
-  <li>List item 3</li>
-</ul>
-```
-
-### Ordered list
-
-For an ordered list, use standard HTML:
-
-```html
-<ol>
-  <li>List item 1</li>
-  <li>List item 2</li>
-  <li>List item 3</li>
-</ol>
-```
-
-#### Ordered list with expressive styling
-
-The `lgListWithExpressiveStyling` directive can be used to replace the default counter of an ordered list with one styled to be expressive:
-
-```html
-<ol lgListWithExpressiveStyling>
-  <li>List item 1</li>
-  <li>List item 2</li>
-  <li>List item 3</li>
-</ol>
-```
-
-## List with icons
-
-### Usage
+- **Level**: parent items and optional child items (nested one level)
+- **Item theme**: `mono`, `positive`, or `negative` using `variant` on each item
+- **Size**: `default` or `large` on the list container, with appropriate typography and spacing differences
 
 Import the list with icons components in your application:
 
-```js
-@NgModule({
-  ...
-  imports: [ ..., LgListWithIconsComponent, etc. ],
-});
+```ts
+import {
+  LgListWithIconsComponent,
+  LgListWithIconsItemComponent,
+} from '@legal-and-general/canopy';
 ```
 
 Register the icons as explained in the [iconography guide](./?path=/docs/foundations-ui-icon-guide--docs).
 
-In your HTML, use either a `ul` or `ol` as you would normally with the addition of the appropriate component selectors as per examples below.
+### Basic example
 
-#### On neutral background
+Use `lg-list-with-icons` on a `ul` element, and `lg-list-with-icons-item` on each `li`:
 
-<Source of={ListStories.NeutralForegroundListWithIcons} />
+<Source of={ListStories.UnorderedList} />
 
-#### On light background
+### Ordered list
 
-<Source of={ListStories.DarkForegroundListWithIcons} />
+Use `lg-list-with-icons` on a `ol` element, and `lg-list-with-icons-item` on each li:
 
-#### On dark background
+<Source of={ListStories.OrderedListWithNumbers} />
 
-<Source of={ListStories.LightForegroundListWithIcons} />
+### Item theme
 
-#### With coloured icons
+Set the item marker theme per item via `variant`: `mono`, `positive` and `negative`
 
-_Note:_ this type of list should only be used on neutral or light background.
+These semantic values map to the corresponding marker colour tokens.
 
-```html
-<ul lg-list-with-icons>
-  <li lg-list-with-icons-item iconName="checkmark" iconColour="--colour-green-600">
-    List item 1
-  </li>
-  <li lg-list-with-icons-item iconName="checkmark" iconColour="--colour-green-600">
-    List item 2
-  </li>
-  <li lg-list-with-icons-item iconName="close" iconColour="--colour-red-800">
-    List item 3
-  </li>
-</ul>
-```
+See each theme in the examples:
 
-#### Nested lists
+- `mono`: [Unordered list](./?path=/story/components-list-with-icons-examples--unordered-list)
+- `mono`: [Ordered list](./?path=/story/components-list-with-icons-examples--ordered-list-with-numbers)
+- `positive` and `negative`: [Considerations list](./?path=/story/components-list-with-icons-examples--considerations-list)
+
+### Sizes
+
+Lists support two sizes:
+
+- **default**: standard typography scale and spacing
+- **large**: larger typography and increased spacing for emphasis
+
+### Indentation
+
+List items can be nested across two levels: parent and child.
+
+Child items are added by placing a nested list inside a parent list item:
 
 ```html
 <ul lg-list-with-icons>
   <li lg-list-with-icons-item iconName="help">List item 1</li>
-  <li lg-list-with-icons-item iconName="light-bulb">
+  <li lg-list-with-icons-item iconName="idea">
     List item 2
     <ul lg-list-with-icons>
-      <li lg-list-with-icons-item iconName="email">List item 2.1</li>
-      <li lg-list-with-icons-item iconName="call">List item 2.2</li>
+      <li lg-list-with-icons-item iconName="checkmark">Child item 1</li>
+      <li lg-list-with-icons-item iconName="checkmark">Child item 2</li>
     </ul>
   </li>
   <li lg-list-with-icons-item iconName="house-outline">List item 3</li>
 </ul>
 ```
 
-### Additional development details
+### Icon customisation
 
-#### LgListComponent
+Icons are customisable via the `iconName` input on each `lg-list-with-icons-item`. Recommended icons for common use cases:
 
-This is where the list items are projected.
+- `checkmark`
+- `checkmark-spot-filled`
+- `bullet-point`
+- `bullet-square`
+- `bullet-feature`
+- `bullet-dash`
+- `bullet-circle`
+- `progress-to-do`
+- `cross`
+- `crossmark-spot-filled`
 
-##### Inputs
+Marker colour can be customised per item using the `variant` input.
 
-| Name      | Description                                                                                | Type     | Default              | Required |
-| --------- | ------------------------------------------------------------------------------------------ | -------- | -------------------- | -------- |
-| `variant` | The colour variants available: `neutral-foreground`, `light-foreground`, `dark-foreground` | `string` | `neutral-foreground` | No       |
+For ordered lists, marker numbers can be set per item using the `number` input.
 
-#### LgListWithIconsItemComponent
+### LgListWithIconsComponent
 
-This is where the content of each list item is projected.
+The container for list items with optional icon support.
 
-##### Inputs
+Item marker theme is controlled on each `LgListWithIconsItemComponent` via its
+`variant` input.
 
-| Name         | Description            | Type                                               | Default     | Required |
-| ------------ | ---------------------- | -------------------------------------------------- | ----------- | -------- |
-| `iconName`   | The name of the icon   | `string`                                           | `undefined` | Yes      |
-| `iconColour` | The colour of the icon | colour value as a `string` (accepts css variables) | `undefined` | No       |
+#### Inputs
+
+| Name   | Description                         | Type     | Default   | Required |
+| ------ | ----------------------------------- | -------- | --------- | -------- |
+| `size` | The list size: `default` or `large` | `string` | `default` | No       |
+
+### LgListWithIconsItemComponent
+
+Individual list item with icon support.
+
+#### Inputs
+
+| Name       | Description                                         | Type     | Default              | Required |
+| ---------- | --------------------------------------------------- | -------- | -------------------- | -------- |
+| `iconName` | The name of the icon to display                     | `string` | `bullet-point`       | No       |
+| `number`   | Ordered marker number for the item                  | `number` | Auto (list position) | No       |
+| `variant`  | The marker theme: `mono`, `positive`, or `negative` | `string` | `mono`               | No       |
 
 ---
 

@@ -32,24 +32,67 @@ describe('LgListWithIconsItemComponent', () => {
     );
   });
 
-  it('should set the correct colour for the icon using css variables', () => {
-    component.iconColour = '--colour-blue-600';
+  it('should default to mono variant when not set', () => {
+    fixture.detectChanges();
 
-    // In Jest with JSDOM, CSS variables might not format exactly as expected
-    // So instead we'll test the component's logic indirectly
-    const updateIconColourSpy = jest.spyOn(component as any, 'updateIconColour');
-
-    component.ngAfterViewInit();
-
-    expect(updateIconColourSpy).toHaveBeenCalledWith('--colour-blue-600');
+    expect(fixture.nativeElement.style.getPropertyValue('--list-item-icon-colour')).toBe(
+      'var(--text-default-primary-colour)',
+    );
   });
 
-  it('should set the correct colour for the icon using any colour', () => {
-    component.iconColour = '#000';
-    component.ngAfterViewInit();
+  it('should map semantic variant values to list tokens', () => {
+    component.variant = 'mono';
+    fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('lg-icon').style.color).toBe(
-      'rgb(0, 0, 0)',
+    expect(fixture.nativeElement.style.getPropertyValue('--list-item-icon-colour')).toBe(
+      'var(--text-default-primary-colour)',
+    );
+
+    component.variant = 'positive';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.style.getPropertyValue('--list-item-icon-colour')).toBe(
+      'var(--list-item-positive-colour)',
+    );
+
+    component.variant = 'negative';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.style.getPropertyValue('--list-item-icon-colour')).toBe(
+      'var(--list-item-negative-colour)',
+    );
+  });
+
+  it('should fall back to mono for unknown variant values', () => {
+    component.variant = 'unknown' as unknown as 'mono' | 'positive' | 'negative';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.style.getPropertyValue('--list-item-icon-colour')).toBe(
+      'var(--text-default-primary-colour)',
+    );
+  });
+
+  it('should use mono marker colour when variant is set to undefined at runtime', () => {
+    component.variant = 'positive';
+    fixture.detectChanges();
+
+    component.variant = undefined as unknown as 'mono' | 'positive' | 'negative';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.style.getPropertyValue('--list-item-icon-colour')).toBe(
+      'var(--text-default-primary-colour)',
+    );
+  });
+
+  it('should use mono marker colour when variant is set to null at runtime', () => {
+    component.variant = 'negative';
+    fixture.detectChanges();
+
+    component.variant = null as unknown as 'mono' | 'positive' | 'negative';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.style.getPropertyValue('--list-item-icon-colour')).toBe(
+      'var(--text-default-primary-colour)',
     );
   });
 });

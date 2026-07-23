@@ -1,4 +1,1 @@
-export type ListWithIconsVariant =
-  | 'neutral-foreground'
-  | 'dark-foreground'
-  | 'light-foreground';
+export type ListWithIconsSize = 'default' | 'large';
