@@ -1,18 +1,12 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
+  HostBinding,
   Input,
-  OnChanges,
-  SimpleChanges,
   ViewEncapsulation,
-  inject,
 } from '@angular/core';
 
 import { IconName, LgIconComponent } from '../../icon';
-
-type Name = IconName;
 
 @Component({
   selector: '[lg-list-with-icons-item]',
@@ -25,31 +19,19 @@ type Name = IconName;
   },
   imports: [ LgIconComponent ],
 })
-export class LgListWithIconsItemComponent implements AfterViewInit, OnChanges {
-  private hostElement = inject(ElementRef);
+export class LgListWithIconsItemComponent {
+  @Input() iconName: IconName = 'bullet-point';
+  @Input() variant: 'mono' | 'positive' | 'negative' = 'mono';
 
-  @Input() iconName: Name;
-  @Input() iconColour: string;
-
-  ngAfterViewInit(): void {
-    this.updateIconColour(this.iconColour);
-  }
-
-  ngOnChanges({ iconColour }: SimpleChanges) {
-    if (iconColour) {
-      this.updateIconColour(iconColour.currentValue);
-    }
-  }
-
-  private updateIconColour(colour: string): void {
-    const el = this.hostElement.nativeElement.getElementsByTagName('lg-icon')[0];
-
-    if (el) {
-      const isCssVar = colour?.startsWith('--');
-
-      el.style.color = isCssVar
-        ? `var(${colour})`
-        : colour;
+  @HostBinding('style.--list-item-icon-colour')
+  get itemIconColour(): string {
+    switch (this.variant) {
+      case 'positive':
+        return 'var(--list-item-positive-colour)';
+      case 'negative':
+        return 'var(--list-item-negative-colour)';
+      default:
+        return 'var(--text-default-primary-colour)';
     }
   }
 }

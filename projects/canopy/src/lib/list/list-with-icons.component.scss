@@ -1,41 +1,11 @@
 @use '../../styles/mixins';
 
 .lg-list-with-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin-left: 0;
-
-  .lg-list-with-icons {
-    margin-bottom: 0;
-  }
-
-  &--neutral-foreground {
-    color: var(--text-default);
-  }
-
-  &--dark-foreground {
-    color: var(--text-default);
-
-    a {
-      @include mixins.lg-link(
-        $default-color: var(--dark-foreground-link-color),
-        $hover-color: var(--dark-foreground-link-hover-color),
-        $visited-color: var(--dark-foreground-link-visited-color),
-        $active-color: var(--dark-foreground-link-active-color),
-        $focus-color: var(--dark-foreground-link-focus-color)
-      );
-    }
-  }
-
-  &--light-foreground {
-    color: var(--colour-greyscale-0);
-
-    a {
-      @include mixins.lg-link(
-        $default-color: var(--light-foreground-link-color),
-        $hover-color: var(--light-foreground-link-hover-color),
-        $visited-color: var(--light-foreground-link-visited-color),
-        $active-color: var(--light-foreground-link-active-color),
-        $focus-color: var(--light-foreground-link-focus-color)
-      );
-    }
-  }
+  margin-bottom: 0;
+  color: inherit;
+  gap: var(--list-gap);
 }
