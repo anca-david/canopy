@@ -12,7 +12,7 @@ import {
   inject,
 } from '@angular/core';
 
-import { ListWithIconsVariant } from './list-with-icons.interface';
+import { ListWithIconsSize } from './list-with-icons.interface';
 
 @Component({
   selector: '[lg-list-with-icons]',
@@ -26,42 +26,57 @@ import { ListWithIconsVariant } from './list-with-icons.interface';
   standalone: true,
 })
 export class LgListWithIconsComponent implements AfterContentInit {
-  private hostElement = inject(ElementRef);
+  private hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
   private renderer = inject(Renderer2);
 
-  private _variant: ListWithIconsVariant;
-  @Input()
-  set variant(variant: ListWithIconsVariant) {
-    if (this._variant) {
-      this.renderer.removeClass(
-        this.hostElement.nativeElement,
-        `lg-list-with-icons--${this.variant}`,
-      );
-    }
-
-    if (variant) {
-      this.renderer.addClass(
-        this.hostElement.nativeElement,
-        `lg-list-with-icons--${variant}`,
-      );
-    }
-
-    this._variant = variant;
-  }
-  get variant(): ListWithIconsVariant {
-    return this._variant;
-  }
+  private _size?: ListWithIconsSize;
 
   @ContentChildren(forwardRef(() => LgListWithIconsComponent), {
     descendants: true,
   })
-  nestedListWithIconsComponents: QueryList<LgListWithIconsComponent>;
+  nestedListWithIconsComponents!: QueryList<LgListWithIconsComponent>;
+
+  @Input()
+  set size(size: ListWithIconsSize) {
+    this.updateHostClass('lg-list-with-icons--', this._size, size);
+    this._size = size;
+    this.nestedListWithIconsComponents?.forEach(c => (c.size = size));
+  }
+  get size(): ListWithIconsSize | undefined {
+    return this._size;
+  }
 
   ngAfterContentInit(): void {
-    this.variant = this.variant || 'neutral-foreground';
+    const isOrdered = this.hostElement.nativeElement.tagName?.toLowerCase() === 'ol';
 
-    this.nestedListWithIconsComponents.forEach(nestedListWithIconsComponent => {
-      nestedListWithIconsComponent.variant = this.variant;
-    });
+    this.updateListType(isOrdered);
+    this.size = this.size || 'default';
+  }
+
+  private updateHostClass(
+    prefix: string,
+    oldValue: ListWithIconsSize | undefined,
+    newValue: ListWithIconsSize | undefined,
+  ): void {
+    if (oldValue) {
+      this.renderer.removeClass(this.hostElement.nativeElement, `${prefix}${oldValue}`);
+    }
+
+    if (newValue) {
+      this.renderer.addClass(this.hostElement.nativeElement, `${prefix}${newValue}`);
+    }
+  }
+
+  private updateListType(isOrdered: boolean): void {
+    const orderedClass = 'lg-list-with-icons--ordered';
+    const unorderedClass = 'lg-list-with-icons--unordered';
+
+    if (isOrdered) {
+      this.renderer.addClass(this.hostElement.nativeElement, orderedClass);
+      this.renderer.removeClass(this.hostElement.nativeElement, unorderedClass);
+    } else {
+      this.renderer.addClass(this.hostElement.nativeElement, unorderedClass);
+      this.renderer.removeClass(this.hostElement.nativeElement, orderedClass);
+    }
   }
 }

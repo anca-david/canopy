@@ -1,21 +1,21 @@
 import { Meta, moduleMetadata } from '@storybook/angular';
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
-import { ListWithIconsVariant } from '../list-with-icons.interface';
+import { IconName } from '../../icon';
+import type { ListWithIconsSize } from '../list-with-icons.interface';
 import { LgListWithIconsComponent } from '../list-with-icons.component';
 import { LgListWithIconsItemComponent } from '../list-with-icons-item/list-with-icons-item.component';
-import { LgListWithExpressiveStylingDirective } from '../list-with-expressive-styling/list-with-expressive-styling.directive';
 
 const template = `
-<ul lg-list-with-icons [variant]="variant">
-  @for (item of listItems; track item.text) {
-    <li lg-list-with-icons-item [iconName]="item.iconName" [iconColour]="colouredIcons ? item.iconColour : null"
+<ul lg-list-with-icons [size]="size">
+  @for (item of listItems; track $index) {
+    <li lg-list-with-icons-item [iconName]="item.iconName ?? 'bullet-point'" [variant]="item.variant"
     ><ng-container [ngTemplateOutlet]="item.isLink ? linkText : text" [ngTemplateOutletContext]="{text: item.text}"></ng-container>
       @if (item.children; as children) {
-        <ul lg-list-with-icons>
-          @for (child of children; track child.text) {
-            <li lg-list-with-icons-item [iconName]="child.iconName" [iconColour]="colouredIcons ? child.iconColour : null"
+        <ul lg-list-with-icons [size]="size">
+          @for (child of children; track $index) {
+            <li lg-list-with-icons-item [iconName]="child.iconName ?? 'bullet-point'" [variant]="child.variant"
             ><ng-container [ngTemplateOutlet]="child.isLink ? linkText : text" [ngTemplateOutletContext]="{text: child.text}"></ng-container>
             </li>
           }
@@ -24,6 +24,80 @@ const template = `
     </li>
   }
 </ul>
+
+<ng-template #text let-text="text">{{ text }}</ng-template>
+<ng-template #linkText let-text="text"><a href="#">{{ text }}</a></ng-template>
+`;
+
+const considerationsTemplate = `
+<div>
+  <h3 style="font-weight: 600;">Things you should consider</h3>
+  <ul lg-list-with-icons [size]="size">
+    @for (item of considerItems; track $index) {
+      <li lg-list-with-icons-item [iconName]="item.iconName ?? 'bullet-point'" [variant]="item.variant"
+      ><ng-container [ngTemplateOutlet]="item.isLink ? linkText : text" [ngTemplateOutletContext]="{text: item.text}"></ng-container>
+      </li>
+    }
+  </ul>
+</div>
+
+<div style="margin-top: var(--space-6);">
+  <h3 style="font-weight: 600;">Things you should also be aware of</h3>
+  <ul lg-list-with-icons [size]="size">
+    @for (item of awareItems; track $index) {
+      <li lg-list-with-icons-item [iconName]="item.iconName ?? 'bullet-point'" [variant]="item.variant"
+      ><ng-container [ngTemplateOutlet]="item.isLink ? linkText : text" [ngTemplateOutletContext]="{text: item.text}"></ng-container>
+      </li>
+    }
+  </ul>
+</div>
+
+<ng-template #text let-text="text">{{ text }}</ng-template>
+<ng-template #linkText let-text="text"><a href="#">{{ text }}</a></ng-template>
+`;
+
+@Component({
+  selector: 'lg-considerations-list-wrapper',
+  template: considerationsTemplate,
+  styles: [
+    `
+      :host {
+        display: block;
+        padding: var(--space-4);
+      }
+      h3 {
+        margin: 0 0 var(--space-4) 0;
+        font-size: var(--font-size-1);
+        font-weight: var(--font-weight-600);
+      }
+    `,
+  ],
+  standalone: true,
+  imports: [ LgListWithIconsComponent, LgListWithIconsItemComponent, NgTemplateOutlet ],
+})
+class ConsiderationsListWrapperComponent {
+  @Input() size!: ListWithIconsSize;
+  @Input() considerItems!: Array<ListItems>;
+  @Input() awareItems!: Array<ListItems>;
+}
+
+const orderedTemplate = `
+<ol lg-list-with-icons [size]="size">
+  @for (item of listItems; track $index) {
+    <li lg-list-with-icons-item [iconName]="item.iconName ?? 'bullet-point'" [variant]="item.variant"
+    ><ng-container [ngTemplateOutlet]="item.isLink ? linkText : text" [ngTemplateOutletContext]="{text: item.text}"></ng-container>
+      @if (item.children; as children) {
+        <ol lg-list-with-icons [size]="size">
+          @for (child of children; track $index) {
+            <li lg-list-with-icons-item [iconName]="child.iconName ?? 'bullet-point'" [variant]="child.variant"
+            ><ng-container [ngTemplateOutlet]="child.isLink ? linkText : text" [ngTemplateOutletContext]="{text: child.text}"></ng-container>
+            </li>
+          }
+        </ol>
+      }
+    </li>
+  }
+</ol>
 
 <ng-template #text let-text="text">{{ text }}</ng-template>
 <ng-template #linkText let-text="text"><a href="#">{{ text }}</a></ng-template>
@@ -44,41 +118,54 @@ const template = `
   imports: [ LgListWithIconsComponent, LgListWithIconsItemComponent, NgTemplateOutlet ],
 })
 class ListWithIconsWrapperComponent {
-  @Input() variant: ListWithIconsVariant;
-  @Input() listItems: Array<ListItems>;
-  @Input() colouredIcons: boolean;
+  @Input() size!: ListWithIconsSize;
+  @Input() listItems!: Array<ListItems>;
+}
 
-  @HostBinding('style.background-color') get bgColour(): string {
-    switch (this.variant) {
-      case 'dark-foreground':
-        return 'var(--colour-yellow-600)';
-      case 'light-foreground':
-        return 'var(--colour-blue-600)';
-      default:
-        return 'var(--colour-greyscale-0)';
-    }
-  }
+@Component({
+  selector: 'lg-ordered-list-with-icons-wrapper',
+  template: orderedTemplate,
+  styles: [
+    `
+      :host {
+        display: block;
+        padding: var(--space-4);
+      }
+    `,
+  ],
+  standalone: true,
+  imports: [ LgListWithIconsComponent, LgListWithIconsItemComponent, NgTemplateOutlet ],
+})
+class OrderedListWithIconsWrapperComponent {
+  @Input() size!: ListWithIconsSize;
+  @Input() listItems!: Array<ListItems>;
 }
 
 export default {
-  title: 'Components/List/Examples',
-  tags: [ 'pending' ],
+  title: 'Components/List with icons/Examples',
+  tags: [],
   decorators: [
     moduleMetadata({
-      imports: [ ListWithIconsWrapperComponent, LgListWithExpressiveStylingDirective ],
+      imports: [
+        ListWithIconsWrapperComponent,
+        OrderedListWithIconsWrapperComponent,
+        ConsiderationsListWrapperComponent,
+      ],
     }),
   ],
   parameters: {
     backgrounds: { disable: true },
   },
   argTypes: {
-    colouredIcons: {
-      description: 'Shows an example of coloured icons',
+    size: {
+      control: 'select',
+      options: [ 'default', 'large' ],
+      description: 'List size variant',
     },
-    variant: {
-      table: {
-        disable: true,
-      },
+    listItems: {
+      control: 'object',
+      description:
+        'List item data. Configure iconName variant per item, and add nested children arrays.',
     },
     class: {
       table: {
@@ -89,91 +176,151 @@ export default {
 } as Meta;
 
 interface ListItems {
-  iconName: string;
-  iconColour?: string;
+  iconName: IconName;
+  variant?: 'mono' | 'positive' | 'negative';
   text: string;
   isLink?: boolean;
   children?: Array<ListItems>;
 }
 
-function getDefaultList(): Array<ListItems> {
-  return [
-    {
-      iconName: 'checkmark',
-      iconColour: '--colour-green-600',
-      text: 'List item 1',
-    },
-    {
-      iconName: 'close',
-      iconColour: '--colour-red-800',
-      text: 'List item 2',
-    },
-    {
-      iconName: 'checkmark',
-      iconColour: '--colour-green-600',
-      text: 'List item 3',
-      children: [
-        {
-          iconName: 'checkmark',
-          iconColour: '--colour-green-600',
-          text: 'List item 3.1',
-        },
-        {
-          iconName: 'checkmark',
-          iconColour: '--colour-green-600',
-          text: 'List item 3.2',
-          isLink: true,
-        },
-      ],
-    },
-    {
-      iconName: 'checkmark',
-      iconColour: '--colour-green-600',
-      text: 'List item 4',
-    },
-    {
-      iconName: 'checkmark',
-      iconColour: '--colour-green-600',
-      text: 'List item 5',
-      isLink: true,
-    },
-  ];
+interface OrderedListItems {
+  variant?: 'mono' | 'positive' | 'negative';
+  text: string;
+  isLink?: boolean;
+  children?: Array<OrderedListItems>;
 }
 
-export const ColouredListWithIcons = {
-  name: '[Internal] Coloured icons',
-  render: (args: ListWithIconsWrapperComponent) => ({
-    props: args,
-    template:
-      '<lg-list-with-icons-wrapper [listItems]="listItems" [variant]="variant" [colouredIcons]="colouredIcons"></lg-list-with-icons-wrapper>',
-  }),
-  args: {
-    listItems: getDefaultList(),
-    colouredIcons: true,
-  },
-  // !dev tag removes a story/component from the sidebar (See: https://github.com/storybookjs/storybook/pull/26634)
-  tags: [ '!dev' ],
-};
+function getConsiderationsListData(): {
+  consider: Array<ListItems>;
+  aware: Array<ListItems>;
+  } {
+  return {
+    consider: [
+      {
+        iconName: 'checkmark',
+        variant: 'positive',
+        text: 'List item',
+      },
+      {
+        iconName: 'checkmark',
+        variant: 'positive',
+        text: 'List item',
+      },
+      {
+        iconName: 'checkmark',
+        variant: 'positive',
+        text: 'List item',
+      },
+      {
+        iconName: 'checkmark',
+        variant: 'positive',
+        text: 'List item',
+      },
+      {
+        iconName: 'checkmark',
+        variant: 'positive',
+        text: 'List item',
+      },
+    ],
+    aware: [
+      {
+        iconName: 'close',
+        variant: 'negative',
+        text: 'List item',
+      },
+      {
+        iconName: 'close',
+        variant: 'negative',
+        text: 'List item',
+      },
+      {
+        iconName: 'close',
+        variant: 'negative',
+        text: 'List item',
+      },
+      {
+        iconName: 'close',
+        variant: 'negative',
+        text: 'List item',
+      },
+      {
+        iconName: 'close',
+        variant: 'negative',
+        text: 'List item',
+      },
+    ],
+  };
+}
 
-export const NeutralForegroundListWithIcons = {
-  name: 'List with icons - Neutral foreground',
+function mapOrderedItemsToListItems(items: Array<OrderedListItems>): Array<ListItems> {
+  return items.map(item => ({
+    iconName: 'checkmark',
+    variant: item.variant,
+    text: item.text,
+    isLink: item.isLink,
+    children: item.children
+      ? mapOrderedItemsToListItems(item.children)
+      : undefined,
+  }));
+}
+
+export const UnorderedList = {
+  name: 'Unordered list',
   render: (args: ListWithIconsWrapperComponent) => ({
     props: args,
     template:
-      '<lg-list-with-icons-wrapper [listItems]="listItems" [variant]="variant" [colouredIcons]="colouredIcons"></lg-list-with-icons-wrapper>',
+      '<lg-list-with-icons-wrapper [listItems]="listItems" [size]="size"></lg-list-with-icons-wrapper>',
   }),
   args: {
-    listItems: getDefaultList(),
-    colouredIcons: false,
+    listItems: [
+      {
+        iconName: 'bullet-point',
+        variant: 'mono',
+        text: 'List item',
+      },
+      {
+        iconName: 'bullet-point',
+        variant: 'mono',
+        text: 'List item',
+      },
+      {
+        iconName: 'bullet-point',
+        variant: 'mono',
+        text: 'List item',
+        children: [
+          {
+            iconName: 'bullet-dash',
+            variant: 'mono',
+            text: 'List item',
+          },
+          {
+            iconName: 'bullet-dash',
+            variant: 'mono',
+            text: 'List item',
+          },
+        ],
+      },
+      {
+        iconName: 'bullet-point',
+        variant: 'mono',
+        text: 'List item',
+      },
+      {
+        iconName: 'bullet-point',
+        variant: 'mono',
+        text: 'List item',
+      },
+    ],
+    size: 'default',
   },
   parameters: {
     docs: {
       source: {
         code: `
           <ul lg-list-with-icons>
-            <li lg-list-with-icons-item iconName="checkmark">List item 1</li>
-            <li lg-list-with-icons-item iconName="checkmark">List item 2</li>
-            <li lg-list-with-icons-item iconName="close">List item 3</li>
+            <li lg-list-with-icons-item iconName="checkmark" variant="mono">List item 1</li>
+            <li lg-list-with-icons-item iconName="checkmark" variant="mono">List item 2</li>
+            <li lg-list-with-icons-item iconName="checkmark" variant="mono">List item 3</li>
           </ul>
         `,
       },
@@ -181,85 +328,126 @@ export const NeutralForegroundListWithIcons = {
   },
 };
 
-export const DarkForegroundListWithIcons = {
-  name: 'List with icons - Dark foreground',
-  render: (args: ListWithIconsWrapperComponent) => ({
+export const ConsiderationsList = {
+  name: 'Considerations list',
+  render: (args: ConsiderationsListWrapperComponent) => ({
     props: args,
     template:
-      '<lg-list-with-icons-wrapper [listItems]="listItems" [variant]="variant" [colouredIcons]="colouredIcons"></lg-list-with-icons-wrapper>',
+      '<lg-considerations-list-wrapper [considerItems]="considerItems" [awareItems]="awareItems" [size]="size"></lg-considerations-list-wrapper>',
   }),
   args: {
-    variant: 'dark-foreground',
-    listItems: getDefaultList(),
-    colouredIcons: false,
+    considerItems: getConsiderationsListData().consider,
+    awareItems: getConsiderationsListData().aware,
+    size: 'default',
   },
   parameters: {
     docs: {
       source: {
         code: `
-          <ul lg-list-with-icons variant="dark-foreground">
-            <li lg-list-with-icons-item iconName="help">List item 1</li>
-            <li lg-list-with-icons-item iconName="idea">List item 2</li>
-            <li lg-list-with-icons-item iconName="house">List item 3</li>
-          </ul>
+          <div>
+            <h3>Things you should consider</h3>
+            <ul lg-list-with-icons>
+              <li lg-list-with-icons-item iconName="checkmark" variant="positive">List item 1</li>
+              <li lg-list-with-icons-item iconName="checkmark" variant="positive">List item 2</li>
+              <li lg-list-with-icons-item iconName="checkmark" variant="positive">List item 3</li>
+              <li lg-list-with-icons-item iconName="checkmark" variant="positive">List item 4</li>
+              <li lg-list-with-icons-item iconName="checkmark" variant="positive">List item 5</li>
+            </ul>
+          </div>
+
+          <div style="margin-top: var(--space-6);">
+            <h3>Things you should also be aware of</h3>
+            <ul lg-list-with-icons>
+              <li lg-list-with-icons-item iconName="close" variant="negative">List item 1</li>
+              <li lg-list-with-icons-item iconName="close" variant="negative">List item 2</li>
+              <li lg-list-with-icons-item iconName="close" variant="negative">List item 3</li>
+              <li lg-list-with-icons-item iconName="close" variant="negative">List item 4</li>
+              <li lg-list-with-icons-item iconName="close" variant="negative">List item 5</li>
+            </ul>
+          </div>
         `,
       },
     },
   },
 };
 
-export const LightForegroundListWithIcons = {
-  name: 'List with icons - Light foreground',
-  render: (args: ListWithIconsWrapperComponent) => ({
-    props: args,
+export const OrderedListWithNumbers = {
+  name: 'Ordered list',
+  render: (
+    args: ListWithIconsWrapperComponent & {
+      orderedListItems: Array<OrderedListItems>;
+    },
+  ) => ({
+    props: {
+      ...args,
+      listItems: mapOrderedItemsToListItems(args.orderedListItems),
+    },
     template:
-      '<lg-list-with-icons-wrapper [listItems]="listItems" [variant]="variant" [colouredIcons]="colouredIcons"></lg-list-with-icons-wrapper>',
+      '<lg-ordered-list-with-icons-wrapper [listItems]="listItems" [size]="size"></lg-ordered-list-with-icons-wrapper>',
   }),
   args: {
-    variant: 'light-foreground',
-    listItems: getDefaultList(),
-    colouredIcons: false,
+    orderedListItems: [
+      {
+        variant: 'mono',
+        text: 'List item',
+      },
+      {
+        variant: 'mono',
+        text: 'List item',
+      },
+      {
+        variant: 'mono',
+        text: 'List item',
+
+        children: [
+          {
+            variant: 'mono',
+            text: 'List item',
+          },
+          {
+            variant: 'mono',
+            text: 'List item',
+            isLink: true,
+          },
+        ],
+      },
+      {
+        text: 'List item',
+      },
+      {
+        text: 'List item',
+      },
+    ],
+    size: 'default',
   },
   argTypes: {
-    colouredIcons: {
+    size: {
+      control: 'select',
+      options: [ 'default', 'large' ],
+      description: 'List size variant',
+    },
+    listItems: {
       table: {
         disable: true,
       },
     },
+    orderedListItems: {
+      control: 'object',
+      description:
+        'Ordered list items. Use text, variant, and nested children for child levels.',
+    },
   },
   parameters: {
     docs: {
       source: {
         code: `
-          <ul lg-list-with-icons variant="light-foreground">
-            <li lg-list-with-icons-item iconName="doc">List item 1</li>
-            <li lg-list-with-icons-item iconName="doc">List item 2</li>
-            <li lg-list-with-icons-item iconName="doc">List item 3</li>
-          </ul>
+          <ol lg-list-with-icons [size]="size">
+            <li lg-list-with-icons-item variant="mono">List item 1</li>
+            <li lg-list-with-icons-item variant="positive">List item 2</li>
+            <li lg-list-with-icons-item variant="negative">List item 3</li>
+          </ol>
         `,
       },
     },
   },
-};
-
-export const OrderedListWithNumerals = {
-  name: 'Ordered list with expressive styling',
-  render: (args: ListWithIconsWrapperComponent) => ({
-    props: args,
-    template: `
-      <ol lgListWithExpressiveStyling>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-        <li>Item 4</li>
-        <li>Item 5</li>
-        <li>Item 6</li>
-        <li>Item 7</li>
-        <li>Item 8</li>
-        <li>Item 9</li>
-        <li>Item 10</li>
-      </ol>
-    `,
-  }),
-  argTypes: { colouredIcons: { table: { disable: true } } },
 };

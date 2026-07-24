@@ -46,23 +46,43 @@ describe('LgListWithIconsComponent', () => {
     expect(listWithIconsEl.getAttribute('class')).toContain('lg-list-with-icons');
   });
 
-  it('should add neutral as the default variant', () => {
-    expect(listWithIconsEl.getAttribute('class')).toContain('neutral-foreground');
+  it('should add unordered class when host element is ul', () => {
+    expect(listWithIconsEl.getAttribute('class')).toContain(
+      'lg-list-with-icons--unordered',
+    );
   });
 
-  it('should add the variant class to the component', () => {
-    component.variant = 'light-foreground';
-    fixture.detectChanges();
-
-    expect(listWithIconsEl.getAttribute('class')).toContain('light');
+  it('should add default as the default size', () => {
+    expect(listWithIconsEl.getAttribute('class')).toContain(
+      'lg-list-with-icons--default',
+    );
   });
 
-  it('should add the variant class to a nested list', () => {
-    component.variant = 'dark-foreground';
+  it('should add the size class to a nested list', () => {
+    component.size = 'large';
     component.ngAfterContentInit();
 
-    expect(listWithIconsEl.querySelector('#nested-list').getAttribute('class')).toContain(
-      'dark-foreground',
+    expect(
+      listWithIconsEl.querySelector('#nested-list')?.getAttribute('class'),
+    ).toContain('lg-list-with-icons--large');
+  });
+
+  it('should add ordered class when host element is ol', () => {
+    const orderedFixture = MockRender(
+      `
+      <ol lg-list-with-icons>
+        <li lg-list-with-icons-item iconName="help">List item 1</li>
+        <li lg-list-with-icons-item iconName="idea">List item 2</li>
+      </ol>
+    `,
+      {},
+      { reset: true },
     );
+
+    orderedFixture.detectChanges();
+
+    const orderedListEl = orderedFixture.debugElement.children[0].nativeElement;
+
+    expect(orderedListEl.getAttribute('class')).toContain('lg-list-with-icons--ordered');
   });
 });

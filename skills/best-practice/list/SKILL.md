@@ -1,22 +1,19 @@
 ---
 name: canopy-list
-description: Best practices for Canopy list styles. Trigger when rendering styled lists, ordered or unordered lists, or icon lists in an Angular project using Canopy.
+description: Best practices for Canopy list-with-icons usage. Trigger when using lg-list-with-icons, lg-list-with-icons-item, ordered list markers, or list item variant theming in Angular.
 license: MIT
 metadata:
   source: https://github.com/Legal-and-General/canopy/tree/master/projects/canopy/src/lib/list/docs/guide.mdx
 ---
 
-# Canopy List — Best Practices
+# Canopy List with Icons - Best Practices
 
-This skill provides usage guidance, dos and don'ts, and input reference for Canopy list styles from `@legal-and-general/canopy`.
-
-Apply this skill whenever you render `<ul>`, `<ol>`, or `LgListWithIconsComponent` in a Canopy application.
+Use this skill whenever you build list UI with `LgListWithIconsComponent` and
+`LgListWithIconsItemComponent` from `@legal-and-general/canopy`.
 
 ---
 
 ## Import
-
-For icon lists only:
 
 ```ts
 import {
@@ -25,75 +22,107 @@ import {
 } from '@legal-and-general/canopy';
 ```
 
-For expressive ordered list styles (directive only — no component import needed beyond the `canopy` stylesheet being loaded):
-
-```ts
-import { LgListWithExpressiveStylingDirective } from '@legal-and-general/canopy';
-```
+Add both to a standalone component `imports` array.
 
 ---
 
-## Unordered and Ordered Lists
+## Basic Usage
 
-Standard `<ul>` and `<ol>` elements automatically receive Canopy styles when the global stylesheet is loaded. No additional component import is needed.
+Apply the directives to native list elements:
 
 ```html
-<ul>
-  <li>Item one</li>
-  <li>Item two</li>
+<ul lg-list-with-icons>
+  <li lg-list-with-icons-item iconName="checkmark" variant="mono">List item 1</li>
+  <li lg-list-with-icons-item iconName="checkmark-spot-filled" variant="mono">
+    List item 2
+  </li>
 </ul>
-
-<ol>
-  <li>Step one</li>
-  <li>Step two</li>
-</ol>
-```
-
-**Expressive ordered list** (large numbered steps):
-
-```html
-<ol lgListWithExpressiveStyling>
-  <li>Complete your details</li>
-  <li>Review and confirm</li>
-</ol>
 ```
 
 ---
 
-## Icon List
+## Ordered Lists
 
-Use `lg-list-with-icons` to display a list where each item has a Canopy icon.
+Use an `ol` with `lg-list-with-icons` for ordered lists. Items are numbered automatically via CSS counters:
 
 ```html
-<lg-list-with-icons>
-  <lg-list-with-icons-item iconName="sun">Sunshine guaranteed</lg-list-with-icons-item>
-  <lg-list-with-icons-item iconName="tick">Cover included</lg-list-with-icons-item>
-</lg-list-with-icons>
+<ol lg-list-with-icons>
+  <li lg-list-with-icons-item iconName="checkmark" variant="mono">Step 1</li>
+  <li lg-list-with-icons-item iconName="checkmark" variant="mono">Step 2</li>
+  <li lg-list-with-icons-item iconName="checkmark" variant="mono">Step 3</li>
+</ol>
 ```
 
-### LgListWithIconsComponent Inputs
+Markers are shown as `1.`, `2.`, `3.` etc. in DOM order, with colour controlled by `variant`.
+
+---
+
+## Item-Level Theming
+
+Set marker colour per item with `variant`:
+
+- `mono`
+- `positive`
+- `negative`
+
+`variant` is item-level and can differ between parent and child items.
+
+`variant` set on an item controls marker colour.
+
+```html
+<ul lg-list-with-icons>
+  <li lg-list-with-icons-item iconName="checkmark" variant="positive">Included</li>
+  <li lg-list-with-icons-item iconName="cross" variant="negative">Not included</li>
+</ul>
+```
+
+---
+
+## Recommended Icons
+
+Prefer the icon names currently used in stories for consistent list semantics:
+
+- `checkmark`
+- `checkmark-spot-filled`
+- `bullet-point`
+- `bullet-square`
+- `bullet-feature`
+- `bullet-dash`
+- `bullet-circle`
+- `progress-to-do`
+- `cross`
+- `crossmark-spot-filled`
+
+---
+
+## Inputs
+
+### LgListWithIconsComponent
 
 | Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `variant` | `'neutral-foreground' \| 'light-foreground' \| 'dark-foreground'` | `'neutral-foreground'` | Sets the icon and text colour context. |
+|---|---|---|---|
+| `size` | `'default' \| 'large'` | `'default'` | Controls list typography and marker sizing. |
 
-### LgListWithIconsItemComponent Inputs
+### LgListWithIconsItemComponent
 
-| Input | Type | Default | Required | Description |
-|-------|------|---------|----------|-------------|
-| `iconName` | `string` | n/a | Yes | The Canopy icon to display. |
-| `iconColour` | `string` | `undefined` | No | Optional CSS custom property to tint the icon. |
+| Input | Type | Default | Description |
+|---|---|---|---|
+| `iconName` | `IconName` | — | Icon shown for unordered items. Keep this set for consistency across templates. |
+| `variant` | `'mono' \| 'positive' \| 'negative'` | `'mono'` | Item-level marker theme (controls both icon and ordered list number colour). |
 
 ---
 
-## Dos and Don'ts
+## Do and Don't
 
 ### Do
 
-1. **Do** use the expressive ordered list style for step-by-step instructions or numbered journeys.
-2. **Do** choose `iconColour` using a Canopy colour token CSS variable (e.g. `--colour-green-600`).
+1. **Do** apply `lg-list-with-icons` to `ul` or `ol`, and `lg-list-with-icons-item` to each `li`.
+2. **Do** use `variant` on each item for mixed positive/negative/neutral lists.
+3. **Do** keep nested lists to parent and one child level.
+4. **Do** use `ol` for naturally ordered sequences; use `ul` for unordered content.
 
 ### Don't
 
-1. **Don't** use coloured icons (`iconColour`) on dark backgrounds — only use on neutral or light backgrounds.
+1. **Don't** rely on plain `ul` or `ol` expecting Canopy list marker styling.
+2. **Don't** use removed APIs such as `iconColour`.
 
