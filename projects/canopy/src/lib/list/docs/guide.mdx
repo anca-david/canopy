@@ -1,21 +1,68 @@
 import { Meta, Markdown, Source } from '@storybook/addon-docs/blocks';
 import Feedback from '../../docs/common/feedback.md?raw';
 import * as ListStories from './lists.stories';
-import { CustomBadge } from 'storybook-addon-tag-badges/manager-helpers';
+import { CustomBadge } from 'storybook-addon-tag-badges/manager-helpers'
 
-<Meta title="Components/List with icons/Guide" tags={['updated']} />
+<Meta title="Components/List/Guide" tags={['updated']} />
 
-# List with icons
+# List
 
-<span style={{ display: 'inline-flex', alignItems: 'baseline', gap: '0.25rem' }}><CustomBadge text="Updated" style={{ backgroundColor: '#caeedd', borderColor: '#caeedd' }} /><span class="small-text">for brand modernisation in Canopy{' '}<a href="https://github.com/Legal-and-General/canopy/releases/tag/v37.0.0">v37</a>.</span></span>
+<span style={{ display: 'inline-flex', alignItems: 'baseline', gap: '0.25rem' }}>
+  <CustomBadge
+    text="Updated"
+    style={{ backgroundColor: '#caeedd', borderColor: '#caeedd' }}
+  />
+  <span class="small-text">for brand modernisation in Canopy {' '} <a href="https://github.com/Legal-and-General/canopy/releases/tag/v33.0.0">v33</a>.</span>
+</span>
 
-## Usage
+<p class="standfirst">Lists are used to list an array of items.</p>
 
-The list with icons component supports:
+<div class="lg-sb-preview">
+  <Story of={ListStories.ColouredListWithIcons} />
 
-- **Level**: parent items and optional child items (nested one level)
-- **Item theme**: `mono`, `positive`, or `negative` using `variant` on each item
-- **Size**: `default` or `large` on the list container, with appropriate typography and spacing differences
+</div>
+
+## Standard list
+
+### Unordered list
+
+For a bulleted unordered list, use standard HTML:
+
+```html
+<ul>
+  <li>List item 1</li>
+  <li>List item 2</li>
+  <li>List item 3</li>
+</ul>
+```
+
+### Ordered list
+
+For an ordered list, use standard HTML:
+
+```html
+<ol>
+  <li>List item 1</li>
+  <li>List item 2</li>
+  <li>List item 3</li>
+</ol>
+```
+
+#### Ordered list with expressive styling
+
+The `lgListWithExpressiveStyling` directive can be used to replace the default counter of an ordered list with one styled to be expressive:
+
+```html
+<ol lgListWithExpressiveStyling>
+  <li>List item 1</li>
+  <li>List item 2</li>
+  <li>List item 3</li>
+</ol>
+```
+
+## List with icons
+
+### Usage
 
 Import the list with icons components in your application:
 

@@ -36,6 +36,7 @@ import { LgAlertComponent } from '../../alert';
         <a
           href="https://github.com/Legal-and-General/canopy/releases?q=&expanded=true"
           target="_blank"
+          rel="noopener noreferrer"
           >Find our releases here.</a
         >
       </p>
