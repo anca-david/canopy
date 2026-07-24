@@ -9,7 +9,7 @@ addons.setConfig({
       badge: {
         text: 'Updated',
         style: {
-          backgroundColor: '#97d700',
+          backgroundColor: '#caeedd',
           color: '#1d1d1b',
           fontWeight: 'normal'
         },

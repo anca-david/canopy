@@ -62,7 +62,7 @@ class ListWithIconsWrapperComponent {
 
 export default {
   title: 'Components/List/Examples',
-  tags: [ 'pending' ],
+  tags: [ 'updated' ],
   decorators: [
     moduleMetadata({
       imports: [ ListWithIconsWrapperComponent, LgListWithExpressiveStylingDirective ],
