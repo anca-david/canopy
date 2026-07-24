@@ -123,7 +123,6 @@ import {
   LgToggleComponent,
 } from '../../../canopy/src/lib/forms';
 import {
-  LgListWithExpressiveStylingDirective,
   LgListWithIconsComponent,
   LgListWithIconsItemComponent,
 } from '../../../canopy/src/lib/list';
@@ -297,7 +296,6 @@ import {
     LgProgressBarComponent,
     LgProgressIndicatorComponent,
     LgProgressHeaderComponent,
-    LgListWithExpressiveStylingDirective,
     RouterLink,
     RouterOutlet,
     LgModalComponent,
